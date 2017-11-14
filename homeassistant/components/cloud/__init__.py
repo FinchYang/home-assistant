@@ -139,7 +139,10 @@ class Cloud:
             yield from self.iot.connect()
 
     def path(self, *parts):
-        """Get config path inside cloud dir."""
+        """Get config path inside cloud dir.
+
+        Async friendly.
+        """
         return self.hass.config.path(CONFIG_DIR, *parts)
 
     @asyncio.coroutine

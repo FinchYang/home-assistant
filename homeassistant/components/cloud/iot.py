@@ -84,12 +84,14 @@ class CloudIoT:
             _LOGGER.info('Connected')
             self.state = STATE_CONNECTED
 
+            # TODO disconnect when subscription expires and refresh token
+
             while not client.closed:
                 msg = yield from client.receive()
 
                 if msg.type in (WSMsgType.ERROR, WSMsgType.CLOSED,
                                 WSMsgType.CLOSING):
-                    disconnect_warn = 'Connection closed'
+                    disconnect_warn = 'Connection cancelled.'
                     break
 
                 elif msg.type != WSMsgType.TEXT:

@@ -72,7 +72,6 @@ def test_initialize_loads_info(mock_os, hass):
     """Test initialize will load info from config file."""
     mock_os.path.isfile.return_value = True
     mopen = mock_open(read_data=json.dumps({
-        'email': 'test-email',
         'id_token': 'test-id-token',
         'access_token': 'test-access-token',
         'refresh_token': 'test-refresh-token',
@@ -85,7 +84,6 @@ def test_initialize_loads_info(mock_os, hass):
     with patch('homeassistant.components.cloud.open', mopen, create=True):
         yield from cl.initialize()
 
-    assert cl.email == 'test-email'
     assert cl.id_token == 'test-id-token'
     assert cl.access_token == 'test-access-token'
     assert cl.refresh_token == 'test-refresh-token'
@@ -102,7 +100,6 @@ def test_logout_clears_info(mock_os, hass):
     yield from cl.logout()
 
     assert len(cl.iot.disconnect.mock_calls) == 1
-    assert cl.email is None
     assert cl.id_token is None
     assert cl.access_token is None
     assert cl.refresh_token is None
@@ -115,7 +112,6 @@ def test_write_user_info():
     mopen = mock_open()
 
     cl = cloud.Cloud(MagicMock(), cloud.MODE_DEV)
-    cl.email = 'test-email'
     cl.id_token = 'test-id-token'
     cl.access_token = 'test-access-token'
     cl.refresh_token = 'test-refresh-token'
@@ -129,7 +125,6 @@ def test_write_user_info():
     data = json.loads(handle.write.mock_calls[0][1][0])
     assert data == {
         'access_token': 'test-access-token',
-        'email': 'test-email',
         'id_token': 'test-id-token',
         'refresh_token': 'test-refresh-token',
     }
